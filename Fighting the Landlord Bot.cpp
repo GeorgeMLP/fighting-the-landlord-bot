@@ -2,9 +2,9 @@
 #include <set>
 #include <string>
 #include <cassert>
-#include <cstring> // 注意memset是cstring里的
+#include <cstring>  // 注意memset是cstring里的
 #include <algorithm>
-#include "jsoncpp/json.h" // 在平台上，C++编译时默认包含此库
+#include "jsoncpp/json.h"  // 在平台上，C++编译时默认包含此库
 #include <functional>
 #include <iterator>
 #include <ctime>
@@ -24,53 +24,53 @@ constexpr int PLAYER_COUNT = 3;
 #pragma region 基本定义
 enum class Stage
 {
-	BIDDING, // 叫分阶段
-	PLAYING	 // 打牌阶段
+	BIDDING,  // 叫分阶段
+	PLAYING	  // 打牌阶段
 };
 
 enum class CardComboType
 {
-	PASS,		// 过
-	SINGLE,		// 单张
-	PAIR,		// 对子
-	STRAIGHT,	// 顺子
-	STRAIGHT2,	// 双顺
-	TRIPLET,	// 三条
-	TRIPLET1,	// 三带一
-	TRIPLET2,	// 三带二
-	BOMB,		// 炸弹
-	QUADRUPLE2, // 四带二（只）
-	QUADRUPLE4, // 四带二（对）
-	PLANE,		// 飞机
-	PLANE1,		// 飞机带小翼
-	PLANE2,		// 飞机带大翼
-	SSHUTTLE,	// 航天飞机
-	SSHUTTLE2,	// 航天飞机带小翼
-	SSHUTTLE4,	// 航天飞机带大翼
-	ROCKET,		// 火箭
-	INVALID		// 非法牌型
+	PASS,		 // 过
+	SINGLE,		 // 单张
+	PAIR,		 // 对子
+	STRAIGHT,	 // 顺子
+	STRAIGHT2,	 // 双顺
+	TRIPLET,	 // 三条
+	TRIPLET1,	 // 三带一
+	TRIPLET2,	 // 三带二
+	BOMB,		 // 炸弹
+	QUADRUPLE2,  // 四带二（只）
+	QUADRUPLE4,  // 四带二（对）
+	PLANE,		 // 飞机
+	PLANE1,		 // 飞机带小翼
+	PLANE2,		 // 飞机带大翼
+	SSHUTTLE,	 // 航天飞机
+	SSHUTTLE2,	 // 航天飞机带小翼
+	SSHUTTLE4,	 // 航天飞机带大翼
+	ROCKET,		 // 火箭
+	INVALID		 // 非法牌型
 };
 
 int cardComboScores[] = {
-	0,	// 过
-	1,	// 单张
-	2,	// 对子
-	6,	// 顺子
-	6,	// 双顺
-	4,	// 三条
-	4,	// 三带一
-	4,	// 三带二
-	10, // 炸弹
-	8,	// 四带二（只）
-	8,	// 四带二（对）
-	8,	// 飞机
-	8,	// 飞机带小翼
-	8,	// 飞机带大翼
-	10, // 航天飞机（需要特判：二连为10分，多连为20分）
-	10, // 航天飞机带小翼
-	10, // 航天飞机带大翼
-	16, // 火箭
-	0	// 非法牌型
+	0,	 // 过
+	1,	 // 单张
+	2,	 // 对子
+	6,	 // 顺子
+	6,	 // 双顺
+	4,	 // 三条
+	4,	 // 三带一
+	4,	 // 三带二
+	10,  // 炸弹
+	8,	 // 四带二（只）
+	8,	 // 四带二（对）
+	8,	 // 飞机
+	8,	 // 飞机带小翼
+	8,	 // 飞机带大翼
+	10,  // 航天飞机（需要特判：二连为10分，多连为20分）
+	10,  // 航天飞机带小翼
+	10,  // 航天飞机带大翼
+	16,  // 火箭
+	0	 // 非法牌型
 };
 
 #ifndef _BOTZONE_ONLINE
@@ -126,7 +126,7 @@ constexpr Level card2level(Card card)
 * 本结构体用来表示若干张扑克牌的组合
 * 成员结构体CardPack用来记录每种牌出现的次数，每个CardPack代表一种牌；对vector<CardPack>进行排序时，按照牌的数量从大到小排序，若相等则按其Level排序
 * 成员函数findMaxSeq计算数量最多的CardPack从头开始递减了几个；例如，888877775555999444663这些牌，从数量最多的8888开始，递减到7777，而5555与7777不连续，故函数返回2；
-*	再比如，999888777554463这些牌，从数量最多的999开始，递减到888，再递减到777，而55与777数量不同，故函数返回3）
+*	再比如，999888777554463这些牌，从数量最多的999开始，递减到888，再递减到777，而55与777数量不同，故函数返回3
 * 成员函数getWeight返回本结构体代表的这些牌的权重（各种牌型的权重见基本定义）
 * 第一个构造函数创建一个空的CardCombo，牌型为PASS，没什么好说的（注意牌型通过枚举类comboType记录）
 * 第二个构造函数将[begin,end)区间内的牌作为一个CardCombo，同时判断出这些牌是什么牌型（如单张、顺子、三带一、不合法，等等），用comboType记录
